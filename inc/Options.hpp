@@ -9,7 +9,6 @@ class Options
 
 		void	inputHelp() const;
 		void	inputRules() const;
-		void	inputExit() const;
 	
 	private:
 		Options(Options const &src);

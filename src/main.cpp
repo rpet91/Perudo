@@ -4,12 +4,8 @@
 #include <string>		// std:string
 #include <cctype>		// std::toupper
 #include <algorithm>	// std::transform
-#include <cstdlib>		// EXIT_SUCCESS
-
-/*void		inputToUpper(std::string &input)
-{
-	std::transform(input.begin(), input.end(), input.begin(), toupper);
-}*/
+#include <cstdlib>		// EXIT_SUCCESS, srand
+#include <ctime>		// time
 
 std::string	readInput()
 {
@@ -22,26 +18,24 @@ std::string	readInput()
 
 int	main()
 {
-	std::cout << "Welcome to Perudo! A game of dice and bluffing. Are you the best at reading your opponents?" << std::endl;
-	std::cout << "Type \"help\" to see a list of options." << std::endl;
+	std::cout << std::endl << "Welcome to Perudo! A game of dice and bluffing. Are you the best at reading your opponents?" << std::endl;
+	std::cout << "Type \"help\" to see a list of options." << std::endl << std::endl;
 
 	std::string		input;
 	Options			options;
 	Game			game;
 
+	srand(time(0));
 	while (true)
 	{
 		std::cout << "What would like you to do?: ";
 		input = readInput();
-	//	std::cin >> input;
-	//	inputToUpper(input);
-
 		if (input == "HELP")
 			options.inputHelp();
 		else if (input == "RULES")
 			options.inputRules();
-		else if (input == "EXIT")
-			options.inputExit();
+		else if (input == "LIST_PLAYERS")
+			game.listPlayers();
 		else if (input == "ADD")
 		{
 			std::cout << "Adding a player.." << std::endl;
@@ -49,10 +43,12 @@ int	main()
 			input = readInput();
 			game.addPlayer(input);
 		}
-		else if (input == "LIST_PLAYERS")
-			game.listPlayers();
-		else if (input == "EXIT")
+		else if (input == "START")
+			game.runGame();
+		else if (input == "EXIT" || std::cin.eof())
 		{
+			if (std::cin.eof())
+				std::cout << std::endl;
 			game.exitGame();
 			break ;
 		}

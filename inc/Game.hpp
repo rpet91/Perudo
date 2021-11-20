@@ -11,15 +11,17 @@ class Game
 		Game();
 		virtual ~Game();
 
-		void	addPlayer(std::string const &name);
 		void	listPlayers() const;
+		void	addPlayer(std::string const &name);
+		void	runGame();
 		void	exitGame();
 
 	private:
 		Game(Game const &src);
 		Game	&operator=(Game const &src);
 
-		size_t					_amountPlayers;
+		void	_setupGame();
+
 		std::vector<Player>		_players;
 };
 

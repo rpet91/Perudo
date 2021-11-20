@@ -1,6 +1,5 @@
 #include "Options.hpp"	// Options.hpp
 #include <iostream>		// std::cout
-#include <cstdlib>		// exit
 
 // Default constructor.
 Options::Options()
@@ -10,13 +9,6 @@ Options::Options()
 // Default destructor.
 Options::~Options()
 {
-}
-
-// This function will exit the program after the user gave it as input.
-void	Options::inputExit() const
-{
-	std::cout << "Thanks for playing Perudo! Hope to see you soon." << std::endl;
-	exit(EXIT_SUCCESS);
 }
 
 // This function will show the user the rules about the game.
