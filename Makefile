@@ -38,7 +38,7 @@ fclean: clean
 
 re: fclean all
 
-debug:
+debug: fclean
 		@make DEBUG=1
 
 game: all
