@@ -36,6 +36,8 @@ int	main()
 			options.inputRules();
 		else if (input == "LIST_PLAYERS")
 			game.listPlayers();
+		else if (input == "DELETE_PLAYERS")
+			game.deletePlayers();
 		else if (input == "ADD")
 		{
 			std::cout << "Adding a player.." << std::endl;
