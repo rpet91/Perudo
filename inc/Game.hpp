@@ -2,7 +2,8 @@
 # define GAME_HPP
 
 # include "Player.hpp"	// Player.hpp
-# include <vector>		// Vector.hpp
+# include <vector>		// std::vector
+# include <map>			// std::map
 # include <string>		// std::string
 
 class Game
@@ -13,6 +14,7 @@ class Game
 
 		void	listPlayers() const;
 		void	addPlayer(std::string const &name);
+		void	deletePlayers();
 		void	runGame();
 		void	exitGame();
 
@@ -21,8 +23,10 @@ class Game
 		Game	&operator=(Game const &src);
 
 		void	_setupGame();
+		void	_decideStartPlayer();
 
-		std::vector<Player>		_players;
+		std::vector<Player>				_players;
+		std::map<size_t, std::string>	_playOrder;
 };
 
 #endif

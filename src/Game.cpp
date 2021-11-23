@@ -4,6 +4,8 @@
 #include <string>		// std::string
 #include <cstdlib>		// system
 
+#include <map>	// debug
+
 // Default constructor.
 Game::Game()
 {
@@ -22,7 +24,7 @@ void	Game::listPlayers() const
 		std::cout << "There are no players added to the game. Please add a player first." << std::endl;
 	else
 	{
-		std::cout << "The current added players in this game are:" << std::endl;
+		std::cout << "The current added players in the game are:" << std::endl;
 		for (size_t i = 0; i < this->_players.size(); i++)
 			std::cout << "- " << this->_players[i].getName() << std::endl;
 	}
@@ -43,22 +45,29 @@ void	Game::addPlayer(std::string const &name)
 	std::cout << "Player " << name << " is successfully added!" << std::endl;
 }
 
+// This function will delete all added players.
+void	Game::deletePlayers()
+{
+	this->_players.clear();
+	std::cout << "Player list has been clear!" << std::endl;
+}
+
 // This function will run the game.
 void	Game::runGame()
 {
 	if (this->_players.size() <= 1)
 	{
-		std::cout << "There are not enough players to start the game! Please add more players." << std::endl;
+		std::cout << "There are not enough players to start the game! You need at least two players." << std::endl;
 		return ;
 	}
 	this->_setupGame();
 
-	for (size_t i = 0; i < this->_players.size(); i++)
+/*	for (size_t i = 0; i < this->_players.size(); i++)
 	{
 		system("clear");
 		std::cout << "----------------------------------------------------" << std::endl;
 		this->_players[i].showDice();
-	}
+	}*/
 }
 
 // This function will free all the memory and exits the game after.
@@ -72,4 +81,32 @@ void	Game::_setupGame()
 {
 	for (size_t i = 0; i < this->_players.size(); i++)
 		this->_players[i].rollDice();
+	this->_decideStartPlayer();
+}
+
+void	Game::_decideStartPlayer()
+{
+	std::map<size_t, std::string>::iterator it;
+	size_t	i = 0;
+	int		randomPlayer = 0;
+
+	this->_playOrder.clear();
+	while (i < this->_players.size())
+	{
+		randomPlayer = rand() % this->_players.size();
+		for (it = this->_playOrder.begin(); it != this->_playOrder.end(); it++)
+		{
+			if (this->_players[randomPlayer].getName() == it->second)
+				break ;
+		}
+		if (it == this->_playOrder.end())
+		{
+			this->_playOrder[i] = this->_players[randomPlayer].getName();
+			i++;
+		}
+	}
+/*	for (std::map<size_t, std::string>::iterator it = this->_playOrder.begin(); it != this->_playOrder.end(); it++)
+	{
+		std::cout << it->first << " " << it->second << std::endl;
+	}*/
 }
