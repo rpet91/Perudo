@@ -42,6 +42,7 @@ void	Options::inputHelp() const
 	std::cout << "- help" << std::endl;
 	std::cout << "- rules" << std::endl;
 	std::cout << "- list_players" << std::endl;
+	std::cout << "- delete_players" << std::endl;
 	std::cout << "- add" << std::endl;
 	std::cout << "- start" << std::endl;
 	std::cout << "- exit" << std::endl;
