@@ -10,6 +10,7 @@ class Player
 		Player(std::string const &name);
 		virtual ~Player();
 		Player(Player const &src);
+		Player	&operator=(Player const &src);
 
 		std::string const	&getName() const;
 		size_t				getAmountDice() const;
@@ -18,7 +19,6 @@ class Player
 
 	private:
 		Player();
-		Player	&operator=(Player const &src);
 
 		void	_printDice(int diceNumber) const;
 

@@ -1,5 +1,8 @@
 #include "Options.hpp"	// Options.hpp
 #include <iostream>		// std::cout
+#include <string>		// std::string
+#include <cctype>		// std::toupper
+#include <algorithm>	// std::transform
 
 // Default constructor.
 Options::Options()
@@ -11,8 +14,18 @@ Options::~Options()
 {
 }
 
+// This function will read the user's input and transform the string to uppercase.
+std::string		Options::readInput()
+{
+	std::string		input;
+
+	std::cin >> input;
+	std::transform(input.begin(), input.end(), input.begin(), toupper);
+	return input;
+}
+
 // This function will show the user the rules about the game.
-void	Options::inputRules() const
+void			Options::inputRules() const
 {
 	std::cout << "--------------------------------------------------------------------" << std::endl << std::endl;
 	std::cout << "This ancient Peruvian dice game is played with 2 to 6 players. It is a skillful game of guesswork, bluff and luck." << std::endl << std::endl;
@@ -36,7 +49,7 @@ void	Options::inputRules() const
 }
 
 // This function will show the user a list of options they van use as a command.
-void	Options::inputHelp() const
+void			Options::inputHelp() const
 {
 	std::cout << "The following options are availabe:" << std::endl;
 	std::cout << "- help" << std::endl;

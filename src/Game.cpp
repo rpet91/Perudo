@@ -1,10 +1,12 @@
 #include "Game.hpp"		// Game.hpp
 #include "Player.hpp"	// Player.hpp
+#include "Options.hpp"	// Options.hpp
 #include <iostream>		// std::cout
 #include <string>		// std::string
 #include <cstdlib>		// system
-
-#include <map>	// debug
+#include <unistd.h>		// usleep
+#include <vector>		// vector
+#include <map>			// map
 
 // Default constructor.
 Game::Game()
@@ -61,13 +63,53 @@ void	Game::runGame()
 		return ;
 	}
 	this->_setupGame();
-
-/*	for (size_t i = 0; i < this->_players.size(); i++)
-	{
-		system("clear");
-		std::cout << "----------------------------------------------------" << std::endl;
+	// debug show dice
+	for (size_t i = 0; i < this->_players.size(); i++)
 		this->_players[i].showDice();
-	}*/
+   	// end debug
+
+	std::map<size_t, std::string>::iterator currentPlayer = this->_playOrder.begin();
+	std::string								playerInput;
+	Options									options;
+
+	// This loop will continue until the game is finished.
+	while (true)
+	{
+		//system("clear");
+		std::cout << "It is " << currentPlayer->second << "'s turn! Press enter to continue..." << std::endl;
+		// This loop will wait for the current player to press enter.
+		while (true)
+		{
+			if (options.readInput() == "ENTER")
+				break ;
+		}
+		// This loop will continue until the current player performed an action.
+		std::cout << "Your dice rolls are:" << std::endl;
+		this->_players[currentPlayer->first].showDice();
+		while (true)
+		{
+			std::cout << "What would you like to call (bid, bluff, perudo)?:";
+			playerInput = options.readInput();
+			if (playerInput == "BID")
+				std::cout << "you chose bid" << std::endl;
+			else if (playerInput == "BLUFF")
+				std::cout << "you chose bluff" << std::endl;
+			else if (playerInput == "PERUDO")
+				std::cout << "you chose perudo" << std::endl;
+			else if (std::cin.eof())
+				return ;
+			else
+				std::cout << "Invalid command, please try again." << std::endl;
+			std::cout << std::endl;
+			break ;
+		}
+		currentPlayer++;
+
+		if (currentPlayer == this->_playOrder.end())
+			currentPlayer = this->_playOrder.begin();
+		usleep(2000000);
+	//	break;
+	}
 }
 
 // This function will free all the memory and exits the game after.
@@ -81,32 +123,41 @@ void	Game::_setupGame()
 {
 	for (size_t i = 0; i < this->_players.size(); i++)
 		this->_players[i].rollDice();
-	this->_decideStartPlayer();
+	this->_decidePlayOrder();
+	std::cout << "Setup complete! Game is starting now..." << std::endl << std::endl;
+	//usleep(2000000);
 }
 
-void	Game::_decideStartPlayer()
+//	This function will decide randomly what the order of the game is.
+void	Game::_decidePlayOrder()
 {
 	std::map<size_t, std::string>::iterator it;
-	size_t	i = 0;
-	int		randomPlayer = 0;
+	std::vector<Player>						newPlayerOrder;
+	size_t									i = 0;
+	int										randomPlayer = 0;
 
 	this->_playOrder.clear();
 	while (i < this->_players.size())
 	{
 		randomPlayer = rand() % this->_players.size();
+		// In the for loop we are checking if we got a duplicate name in the randomizer.
 		for (it = this->_playOrder.begin(); it != this->_playOrder.end(); it++)
 		{
 			if (this->_players[randomPlayer].getName() == it->second)
 				break ;
 		}
+		// If we iterated to the end, it means the name has not been added yet.
 		if (it == this->_playOrder.end())
 		{
 			this->_playOrder[i] = this->_players[randomPlayer].getName();
+			newPlayerOrder.push_back(this->_players[randomPlayer]);
 			i++;
 		}
 	}
-/*	for (std::map<size_t, std::string>::iterator it = this->_playOrder.begin(); it != this->_playOrder.end(); it++)
+	this->_players = newPlayerOrder;
+	std::cout << "The play order during the game is:" << std::endl;
+	for (std::vector<Player>::iterator it = this->_players.begin(); it != this->_players.end(); it++)
 	{
-		std::cout << it->first << " " << it->second << std::endl;
-	}*/
+		std::cout << "- " << it->getName() << std::endl;
+	}
 }

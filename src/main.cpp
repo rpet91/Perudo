@@ -2,19 +2,8 @@
 #include "Game.hpp"		// Game.hpp
 #include <iostream>		// std::cout
 #include <string>		// std:string
-#include <cctype>		// std::toupper
-#include <algorithm>	// std::transform
 #include <cstdlib>		// EXIT_SUCCESS, srand
 #include <ctime>		// time
-
-std::string	readInput()
-{
-	std::string		input;
-
-	std::cin >> input;
-	std::transform(input.begin(), input.end(), input.begin(), toupper);
-	return input;
-}
 
 int	main()
 {
@@ -29,7 +18,7 @@ int	main()
 	while (true)
 	{
 		std::cout << "What would like you to do?: ";
-		input = readInput();
+		input = options.readInput();
 		if (input == "HELP")
 			options.inputHelp();
 		else if (input == "RULES")
@@ -42,7 +31,7 @@ int	main()
 		{
 			std::cout << "Adding a player.." << std::endl;
 			std::cout << "What's the player's name?: ";
-			input = readInput();
+			input = options.readInput();
 			game.addPlayer(input);
 		}
 		else if (input == "START")

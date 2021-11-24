@@ -1,14 +1,17 @@
 #ifndef OPTIONS_HPP
 # define OPTIONS_HPP
 
+# include <string>	// std::string
+
 class Options
 {
 	public:
 		Options();
 		virtual ~Options();
 
-		void	inputHelp() const;
-		void	inputRules() const;
+		std::string	readInput();
+		void		inputRules() const;
+		void		inputHelp() const;
 	
 	private:
 		Options(Options const &src);

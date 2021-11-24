@@ -23,7 +23,7 @@ class Game
 		Game	&operator=(Game const &src);
 
 		void	_setupGame();
-		void	_decideStartPlayer();
+		void	_decidePlayOrder();
 
 		std::vector<Player>				_players;
 		std::map<size_t, std::string>	_playOrder;
