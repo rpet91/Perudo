@@ -62,7 +62,7 @@ void				Player::_printDice(int diceNumber) const
 {
 	if (diceNumber == 1)
 	{
-		std::cout << "J ";
+		std::cout << "[J] ";
 	/*	std::cout << ".---------." << std::endl;
 		std::cout << "|   ----  |" << std::endl;
 		std::cout << "|      |  |" << std::endl;
@@ -73,7 +73,7 @@ void				Player::_printDice(int diceNumber) const
 	}
 	else if (diceNumber == 2)
 	{
-		std::cout << "2 ";
+		std::cout << "[2] ";
 	/*	std::cout << ".---------." << std::endl;
 		std::cout << "|       O |" << std::endl;
 		std::cout << "|         |" << std::endl;
@@ -84,7 +84,7 @@ void				Player::_printDice(int diceNumber) const
 	}
 	else if (diceNumber == 3)
 	{
-		std::cout << "3 ";
+		std::cout << "[3] ";
 	/*	std::cout << ".---------." << std::endl;
 		std::cout << "|       O |" << std::endl;
 		std::cout << "|         |" << std::endl;
@@ -95,7 +95,7 @@ void				Player::_printDice(int diceNumber) const
 	}
 	else if (diceNumber == 4)
 	{
-		std::cout << "4 ";
+		std::cout << "[4] ";
 	/*	std::cout << ".---------." << std::endl;
 		std::cout << "| O     O |" << std::endl;
 		std::cout << "|         |" << std::endl;
@@ -106,7 +106,7 @@ void				Player::_printDice(int diceNumber) const
 	}
 	else if (diceNumber == 5)
 	{
-		std::cout << "5 ";
+		std::cout << "[5] ";
 	/*	std::cout << ".---------." << std::endl;
 		std::cout << "| O     O |" << std::endl;
 		std::cout << "|         |" << std::endl;
@@ -117,7 +117,7 @@ void				Player::_printDice(int diceNumber) const
 	}
 	else if (diceNumber == 6)
 	{
-		std::cout << "6 ";
+		std::cout << "[6] ";
 	/*	std::cout << ".---------." << std::endl;
 		std::cout << "| O     O |" << std::endl;
 		std::cout << "|         |" << std::endl;

@@ -36,10 +36,8 @@ int	main()
 		}
 		else if (input == "START")
 			game.runGame();
-		else if (input == "EXIT" || std::cin.eof())
+		else if (input == "EXIT")
 		{
-			if (std::cin.eof())
-				std::cout << std::endl;
 			game.exitGame();
 			break ;
 		}

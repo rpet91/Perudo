@@ -2,6 +2,7 @@
 # define GAME_HPP
 
 # include "Player.hpp"	// Player.hpp
+# include "Options.hpp"	// Options.hpp
 # include <vector>		// std::vector
 # include <map>			// std::map
 # include <string>		// std::string
@@ -24,9 +25,17 @@ class Game
 
 		void	_setupGame();
 		void	_decidePlayOrder();
+		void	_showPreviousBid(std::string const &currentPlayer) const;
+		void	_bid();
+		bool	_isAllDigits(std::string const &input);
 
+		Options							_options;
 		std::vector<Player>				_players;
 		std::map<size_t, std::string>	_playOrder;
+		size_t							_amountOfDice;
+		size_t							_valueOfDice;
+		size_t							_roundNumber;
+		bool							_palifico;
 };
 
 #endif

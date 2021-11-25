@@ -1,8 +1,9 @@
 #include "Options.hpp"	// Options.hpp
 #include <iostream>		// std::cout
-#include <string>		// std::string
+#include <string>		// std::string, std::getline
 #include <cctype>		// std::toupper
 #include <algorithm>	// std::transform
+#include <cstdlib>		// exit, EXIT_SUCCESS
 
 // Default constructor.
 Options::Options()
@@ -19,7 +20,12 @@ std::string		Options::readInput()
 {
 	std::string		input;
 
-	std::cin >> input;
+	std::getline(std::cin, input);
+	if (std::cin.eof())
+	{
+		std::cout << std::endl << "Exiting program." << std::endl;
+		exit(EXIT_SUCCESS);
+	}
 	std::transform(input.begin(), input.end(), input.begin(), toupper);
 	return input;
 }
