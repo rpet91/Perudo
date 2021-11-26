@@ -4,10 +4,12 @@
 #include <vector>		// std::vector
 #include <cstdlib>		// rand
 
+#define JOKER 1			// define for readability
+
 // Constructor when a new player is created.
 Player::Player(std::string const &name) : _name(name)
 {
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 2; i++)
 		this->_dice.push_back(0);
 }
 
@@ -42,6 +44,20 @@ size_t				Player::getAmountDice() const
 	return this->_dice.size();
 }
 
+// This function will count how many dice you rolled of the given value.
+size_t				Player::getAmountOfRolledValues(int value)
+{
+	size_t	total = 0;
+
+	this->showDice();
+	for (size_t i = 0; i < this->getAmountDice(); i++)
+	{
+		if (value == this->_dice[i] || this->_dice[i] == JOKER)
+			total++;
+	}
+	return total;
+}
+
 // This function will roll all the dice.
 void				Player::rollDice()
 {
@@ -52,15 +68,22 @@ void				Player::rollDice()
 // This function will print out your dice rolls.
 void				Player::showDice() const
 {
-	std::cout << this->_name << " rolled:" << std::endl << std::endl;
+	std::cout << this->_name << " rolled:" << std::endl;
 	for (size_t i = 0; i < this->getAmountDice(); i++)
 		this->_printDice(this->_dice[i]);
 	std::cout << std::endl << std::endl;
 }
 
+// This function will remove a die from the losing player.
+void				Player::removeDieFromPlayer()
+{
+	this->_dice.pop_back();
+}
+
+// This function will print all the dice the player rolled.
 void				Player::_printDice(int diceNumber) const
 {
-	if (diceNumber == 1)
+	if (diceNumber == JOKER)
 	{
 		std::cout << "[J] ";
 	/*	std::cout << ".---------." << std::endl;

@@ -8,10 +8,11 @@
 #include <vector>		// vector
 #include <map>			// map
 
-#define JOKER 7			// define for readability
+// Defines for readability
+#define JOKER 7
 
 // Default constructor.
-Game::Game() : _amountOfDice(1), _valueOfDice(1), _roundNumber(1), _palifico(false)
+Game::Game() : _totalAmountOfDiceInGame(0), _amountOfDice(1), _valueOfDice(1), _roundNumber(1), _indexPlayer(0), _palifico(false)
 {
 }
 
@@ -20,6 +21,25 @@ Game::~Game()
 {
 }
 
+// Copy constructor.
+/*Game::Game(Game const &src)
+{
+	*this = src;
+}
+
+// Assignment operator.
+Game	&Game::operator=(Game const &src)
+{
+//	this->_options = src._options;
+	this->_players = src._players;
+	this->_playOrder = src._playOrder;
+	this->_previousPlayer = src._previousPlayer;
+	this->_amountOfDice = src._amountOfDice;
+	this->_valueOfDice = src._valueOfDice;
+	this->_roundNumber = src._roundNumber;
+	this->_palifico = src._palifico;
+	return *this;
+}*/
 
 // This function will show a list of current players added to the game.
 void	Game::listPlayers() const
@@ -42,10 +62,23 @@ void	Game::addPlayer(std::string const &name)
 		std::cout << "Maximum player count reached!" << std::endl;
 		return ;
 	}
+
+	std::vector<Player>::iterator it = this->_players.begin();
+
+	while (it != this->_players.end())
+	{
+		if (it->getName() == name)
+		{
+			std::cout << "Invalid name! The player's name is already in the game." << std::endl;
+			return ;
+		}
+		it++;
+	}
 	
 	Player	newPlayer(name);
 
 	this->_players.push_back(newPlayer);
+	this->_totalAmountOfDiceInGame += newPlayer.getAmountDice();
 	std::cout << "Player " << name << " is successfully added!" << std::endl;
 }
 
@@ -78,7 +111,7 @@ void	Game::runGame()
 	{
 		system("clear");
 		system("clear");
-		this->_showPreviousBid(currentPlayer->second);
+		this->_showPreviousBid();
 		std::cout << "Turn " << this->_roundNumber << "! It is \033[1;32m";
 		std::cout << currentPlayer->second << "'s\033[0m turn. Press enter to continue..." << std::endl;
 		// This loop will wait for the current player to be ready for their turn.
@@ -86,14 +119,23 @@ void	Game::runGame()
 		// This loop will continue until the current player performed an action.
 		std::cout << "Your dice rolls are:" << std::endl;
 		this->_players[currentPlayer->first].showDice();
+		this->_indexPlayer = (int)currentPlayer->first;
+		std::cout << "INDEX PLAYER: "<< this->_indexPlayer << std::endl;
 		while (true)
 		{
 			std::cout << "What would you like to call (bid/bluff/perudo)?: ";
 			playerInput = this->_options.readInput();
 			if (playerInput == "BID")
-				this->_bid();
+				this->_bid(currentPlayer->second);
 			else if (playerInput == "BLUFF")
-				std::cout << "you chose bluff" << std::endl;
+			{
+				if (this->_roundNumber == 1)
+				{
+					std::cout << "You can't call bluff when nobody did a bid yet!" << std::endl;
+					continue ;
+				}
+				this->_bluff(currentPlayer->second);
+			}
 			else if (playerInput == "PERUDO")
 				std::cout << "you chose perudo" << std::endl;
 			else
@@ -104,10 +146,23 @@ void	Game::runGame()
 			std::cout << std::endl;
 			break ;
 		}
-		currentPlayer++;
-		this->_roundNumber++;
+		// If the current player did a bid we go the next player.
+		if (playerInput == "BID")
+		{
+			currentPlayer++;
+			this->_roundNumber++;
+		}
+		else
+		{
+			currentPlayer = this->_playOrder.begin();
+			for (int i = 0; i < this->_indexPlayer; i++)
+				currentPlayer++;
+			std::cout << "\033[1;32m" << currentPlayer->second;
+			std::cout << "\033[0m will start the new round!" << std::endl;
+			this->_waitForPlayers();
+		}
 
-		// If t
+		// If we reached the last player of a round we go back to the first player.
 		if (currentPlayer == this->_playOrder.end())
 			currentPlayer = this->_playOrder.begin();
 		usleep(2000000);
@@ -116,7 +171,7 @@ void	Game::runGame()
 }
 
 // This function will free all the memory and exits the game after.
-void	Game::exitGame()
+void		Game::exitGame()
 {
 	this->_players.clear();
 	std::cout << "Thanks for playing Perudo. Hope to see you next time!" << std::endl;
@@ -132,8 +187,7 @@ void	Game::_setupGame()
 	this->_decidePlayOrder();
 	std::cout << "Setup complete! Game is starting now..." << std::endl;
 	usleep(1000000);
-	std::cout << "Press enter whenever everyone is ready..." << std::endl;
-	while (this->_options.readInput()[0] != '\0') {}
+	this->_waitForPlayers();
 }
 
 //	This function will decide randomly what the order of the game is.
@@ -169,26 +223,21 @@ void	Game::_decidePlayOrder()
 }
 
 // This function shows what the previous player has bid.
-void	Game::_showPreviousBid(std::string const &currentPlayer) const
+void	Game::_showPreviousBid()
 {
-	static std::string	previousPlayer;
-
-	if (this->_roundNumber == 1)
+	if (this->_roundNumber > 1)
 	{
-		previousPlayer = currentPlayer;
-		return ;
+		std::cout << "The previous bid by \033[1;32m" << this->_previousPlayer;
+		std::cout << "\033[0m was \033[1;31m[" << this->_amountOfDice << "] [";
+		if (this->_valueOfDice == JOKER)
+			std::cout << "J's]\033[0m" << std::endl << std::endl;
+		else
+			std::cout << this->_valueOfDice << "'s]\033[0m" << std::endl << std::endl;
 	}
-	std::cout << "The previous bid by \033[1;32m" << previousPlayer;
-	std::cout << "\033[0m was \033[1;31m[" << this->_amountOfDice << "] [";
-	if (this->_valueOfDice == JOKER)
-		std::cout << "J's]\033[0m" << std::endl << std::endl;
-	else
-		std::cout << this->_valueOfDice << "'s]\033[0m" << std::endl << std::endl;
-	previousPlayer = currentPlayer;
 }
 
 // This function is called when the current player wants to call a bid.
-void	Game::_bid()
+void	Game::_bid(std::string const &currentPlayer)
 {
 	std::string			input;
 	size_t				newAmount;
@@ -236,6 +285,13 @@ void	Game::_bid()
 		else
 			newAmount = 0;
 
+		// Checks if the user bids more than the total amount of dice.
+		if (newAmount > this->_totalAmountOfDiceInGame)
+		{
+			std::cout << "You really shouldn't bid more dice than there are actually in the game. Please, try again." << std::endl;
+			continue ;
+		}
+
 		// Checks if the user wants to start a round with a Joker bid without Palifico.
 		if (joker == true && this->_palifico == false && this->_roundNumber == 1)
 		{
@@ -259,10 +315,118 @@ void	Game::_bid()
 	}
 	this->_amountOfDice = newAmount;
 	this->_valueOfDice = newValue;
+	this->_previousPlayer = currentPlayer;
+}
+
+// This function will count all the dice and summarize who loses a die.
+void	Game::_bluff(std::string const &currentPlayer)
+{
+	std::vector<Player>::iterator	it = this->_players.begin();
+	std::string						losingPlayer;
+	bool							previousPlayer = false;
+	size_t							totalValues = 0;
+
+	std::cout << "\033[1;32m" << currentPlayer;
+	std::cout << "\033[0m called bluff! Lets count the dice..." << std::endl;
+	// This loop will count from all the players how many of the last bid are in the game.
+	while (it != this->_players.end())
+	{
+		totalValues += it->getAmountOfRolledValues(this->_valueOfDice);
+		it++;
+	}
+	usleep(1500000);
+	std::cout << "There is a total of \033[1;36m[" << totalValues;
+	std::cout << "]\033[0m die/dice of value \033[1;36m[" << this->_valueOfDice;
+	std::cout << "]\033[0m in the game!" << std::endl << std::endl;
+	// If there are less dice of the value in the game than the previous player bid,
+	// the player who called bluff is correct.
+	if (totalValues < this->_amountOfDice)
+	{
+		std::cout << "\033[1;32m" << currentPlayer << "\033[0m is correct and \033[1;32m";
+		std::cout << this->_previousPlayer << "\033[0m will lose a die!" << std::endl;
+		losingPlayer = this->_previousPlayer;
+		previousPlayer = true;
+	}
+	else
+	{
+		std::cout << "\033[1;32m" << currentPlayer;
+		std::cout << "\033[0m is not correct and they will lose a die!" << std::endl;
+		losingPlayer = currentPlayer;
+	}
+	this->_substractDie(losingPlayer, previousPlayer);
+	this->_resetAndStartNewRound();
+	std::cout << "INDEX START PLAYER END: " << this->_indexPlayer << std::endl;
+	this->_totalAmountOfDiceInGame--;
 }
 
 // This function will check if the user's input has digits only.
 bool	Game::_isAllDigits(std::string const &input)
 {
 	return input.find_first_not_of("0123456789") == std::string::npos;
+}
+
+// This function will remove a die from the losing player and checks if the player is game over.
+void	Game::_substractDie(std::string const &playerName, bool previousPlayer)
+{
+	std::vector<Player>::iterator	it = this->_players.begin();
+	size_t							playerIndex = 0;
+
+	// This loop will find the player who has to remove a die.
+	while (it->getName() != playerName)
+	{
+		it++;
+		playerIndex++;
+	}
+	this->_players[playerIndex].removeDieFromPlayer();
+	std::cout << "INDEX START PLAYER before decide: " << this->_indexPlayer << std::endl;
+	
+	// This will check if the losing player has any dice left.
+	if (this->_players[playerIndex].getAmountDice() == 0)
+	{
+		std::cout << "\033[1;32m" << playerName;
+		std::cout << "\033[0m has no dice left and is game over!" << std::endl;
+		this->_decideStartPlayerNewRound(true, previousPlayer);
+		this->_playOrder.erase(playerIndex);
+		this->_players.erase(it);
+	}
+	else
+		this->_decideStartPlayerNewRound(false, previousPlayer);
+
+}
+
+// This function will reset the round to the default starting settings.
+void	Game::_resetAndStartNewRound()
+{
+	for (size_t i = 0; i < this->_players.size(); i++)
+		this->_players[i].rollDice();
+	this->_previousPlayer.clear();
+	this->_amountOfDice = 1;
+	this->_valueOfDice = 1;
+	this->_roundNumber = 1;
+}
+
+// This function will decide who has to start the new round.
+void	Game::_decideStartPlayerNewRound(bool gameOver, bool previousPlayer)
+{
+	std::cout << "INDEX START PLAYER 1 " << this->_indexPlayer << std::endl;
+	if (previousPlayer == true)
+		this->_indexPlayer--;
+	std::cout << "INDEX START PLAYER 2: " << this->_indexPlayer << std::endl;
+	if (this->_indexPlayer == (int)this->_players.size() && gameOver == true)
+		this->_indexPlayer = 0;
+	else if (this->_indexPlayer == -1)
+	{
+		this->_indexPlayer = this->_players.size() - 1;
+		std::cout << "INDEX START PLAYER 2a: " << this->_indexPlayer << std::endl;
+		if (gameOver == true)
+			this->_indexPlayer = 0;
+		std::cout << "INDEX START PLAYER 2b: " << this->_indexPlayer << std::endl;
+	}
+	std::cout << "INDEX START PLAYER 3: " << this->_indexPlayer << std::endl;
+}
+
+void	Game::_waitForPlayers()
+{
+	std::cout << "Press enter when everyone is ready..." << std::endl;
+	while (this->_options.readInput()[0] != '\0') {}
 }
