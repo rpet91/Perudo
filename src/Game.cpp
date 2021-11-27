@@ -66,6 +66,7 @@ void	Game::addPlayer(std::string const &name)
 void	Game::deletePlayers()
 {
 	this->_players.clear();
+	this->_playOrder.clear();
 	std::cout << "Player list has been clear!" << std::endl;
 }
 
@@ -160,6 +161,7 @@ void	Game::runGame()
 			currentPlayer = this->_playOrder.begin();
 		usleep(2000000);
 	}
+	this->deletePlayers();
 }
 
 // This function will free all the memory and exits the game after.
