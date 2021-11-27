@@ -28,10 +28,12 @@ class Game
 		void	_showPreviousBid();
 		void	_bid(std::string const &currentPlayer);
 		void	_bluff(std::string const &currentPlayer);
+		void	_perudo(std::string const &currentPlayer);
 		bool	_isAllDigits(std::string const &input);
-		void	_substractDie(std::string const &playerName, bool previousPlayer);
+		void	_adjustDice(std::string const &playerName, bool previousPlayer, bool addDie);
 		void	_resetAndStartNewRound();
 		void	_decideStartPlayerNewRound(bool gameOver, bool previousPlayer);
+		size_t	_countAllTheValues(std::string const &currentPlayer, std::string const &call);
 		void	_waitForPlayers();
 
 		Options							_options;

@@ -9,7 +9,7 @@
 // Constructor when a new player is created.
 Player::Player(std::string const &name) : _name(name)
 {
-	for (int i = 0; i < 2; i++)
+	for (int i = 0; i < 5; i++)
 		this->_dice.push_back(0);
 }
 
@@ -45,14 +45,14 @@ size_t				Player::getAmountDice() const
 }
 
 // This function will count how many dice you rolled of the given value.
-size_t				Player::getAmountOfRolledValues(int value)
+size_t				Player::getAmountOfRolledValues(int value, bool palifico)
 {
 	size_t	total = 0;
 
 	this->showDice();
 	for (size_t i = 0; i < this->getAmountDice(); i++)
 	{
-		if (value == this->_dice[i] || this->_dice[i] == JOKER)
+		if (value == this->_dice[i] || (this->_dice[i] == JOKER && palifico == false))
 			total++;
 	}
 	return total;
@@ -78,6 +78,11 @@ void				Player::showDice() const
 void				Player::removeDieFromPlayer()
 {
 	this->_dice.pop_back();
+}
+
+void				Player::addDieToPlayer()
+{
+	this->_dice.push_back(0);
 }
 
 // This function will print all the dice the player rolled.

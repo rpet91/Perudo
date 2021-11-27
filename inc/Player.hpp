@@ -14,10 +14,11 @@ class Player
 
 		std::string const	&getName() const;
 		size_t				getAmountDice() const;
-		size_t				getAmountOfRolledValues(int value);
+		size_t				getAmountOfRolledValues(int value, bool palifico);
 		void				rollDice();
 		void				showDice() const;
 		void				removeDieFromPlayer();
+		void				addDieToPlayer();
 
 	private:
 		Player();
