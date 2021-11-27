@@ -21,26 +21,6 @@ Game::~Game()
 {
 }
 
-// Copy constructor.
-/*Game::Game(Game const &src)
-{
-	*this = src;
-}
-
-// Assignment operator.
-Game	&Game::operator=(Game const &src)
-{
-//	this->_options = src._options;
-	this->_players = src._players;
-	this->_playOrder = src._playOrder;
-	this->_previousPlayer = src._previousPlayer;
-	this->_amountOfDice = src._amountOfDice;
-	this->_valueOfDice = src._valueOfDice;
-	this->_roundNumber = src._roundNumber;
-	this->_palafico = src._palafico;
-	return *this;
-}*/
-
 // This function will show a list of current players added to the game.
 void	Game::listPlayers() const
 {
