@@ -11,6 +11,6 @@ For the most part I implemented the rules from the original game. But here is a 
 - Changed the rule that perudo can't be called by the next player to only the next player.
 
 # Instructions
-Compile the program with ```make``` or ```make game``` to launch the game. A list of instructions is shown which will help you through to get started. You'll need at least two players with a maximum of five. When the game is launched you have a list of options you can perform.
+Compile the program with ```make``` or ```make game``` to launch the game. A list of instructions is shown which will help you through to get started. You'll need at least two players with a maximum of five.
 
 ![dobbelspellen-perudo-2](https://user-images.githubusercontent.com/57190868/143675370-d6a42dfa-6522-4665-8773-41da7abaa7eb.jpg)
