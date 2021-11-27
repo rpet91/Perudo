@@ -45,14 +45,14 @@ size_t				Player::getAmountDice() const
 }
 
 // This function will count how many dice you rolled of the given value.
-size_t				Player::getAmountOfRolledValues(int value, bool palifico)
+size_t				Player::getAmountOfRolledValues(int value, bool palafico)
 {
 	size_t	total = 0;
 
 	this->showDice();
 	for (size_t i = 0; i < this->getAmountDice(); i++)
 	{
-		if (value == this->_dice[i] || (this->_dice[i] == JOKER && palifico == false))
+		if (value == this->_dice[i] || (this->_dice[i] == JOKER && palafico == false))
 			total++;
 	}
 	return total;

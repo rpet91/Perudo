@@ -12,7 +12,7 @@
 #define JOKER 7
 
 // Default constructor.
-Game::Game() : _totalAmountOfDiceInGame(0), _amountOfDice(1), _valueOfDice(1), _roundNumber(1), _indexPlayer(0), _palifico(false)
+Game::Game() : _totalAmountOfDiceInGame(0), _amountOfDice(1), _valueOfDice(1), _roundNumber(1), _indexPlayer(0), _palafico(false)
 {
 }
 
@@ -37,7 +37,7 @@ Game	&Game::operator=(Game const &src)
 	this->_amountOfDice = src._amountOfDice;
 	this->_valueOfDice = src._valueOfDice;
 	this->_roundNumber = src._roundNumber;
-	this->_palifico = src._palifico;
+	this->_palafico = src._palafico;
 	return *this;
 }*/
 
@@ -262,7 +262,7 @@ void	Game::_bid(std::string const &currentPlayer)
 	if (this->_valueOfDice == JOKER)
 	{
 		this->_amountOfDice = (2 * this->_amountOfDice) + 1;
-		if (this->_palifico == true)
+		if (this->_palafico == true)
 			this->_valueOfDice = JOKER;
 		else
 			this->_valueOfDice = 1;
@@ -307,8 +307,8 @@ void	Game::_bid(std::string const &currentPlayer)
 			continue ;
 		}
 
-		// Checks if the user wants to start a round with a Joker bid without Palifico.
-		if (joker == true && this->_palifico == false && this->_roundNumber == 1)
+		// Checks if the user wants to start a round with a Joker bid without palafico.
+		if (joker == true && this->_palafico == false && this->_roundNumber == 1)
 		{
 			std::cout << "The first bid of a round can't be Jokers." << std::endl;
 			continue ;
@@ -316,12 +316,12 @@ void	Game::_bid(std::string const &currentPlayer)
 		// Checks if the given values are valid (2-6 and jokers).
 		if ((newValue >= 2 && newValue <= 6) || joker == true)
 		{
-			// If palifico is true, then the players can't change the value they are bidding.
-			if (this->_palifico == true)
+			// If palafico is true, then the players can't change the value they are bidding.
+			if (this->_palafico == true)
 			{
 				if (this->_roundNumber > 1 && newValue != this->_valueOfDice)
 				{
-					std::cout << "During palifico you can't change the value of the dice." << std::endl;
+					std::cout << "During palafico you can't change the value of the dice." << std::endl;
 					continue ;
 				}
 			}
@@ -404,7 +404,7 @@ void	Game::_adjustDice(std::string const &playerName, bool previousPlayer, bool 
 	std::vector<Player>::iterator	it = this->_players.begin();
 	size_t							playerIndex = 0;
 
-	this->_palifico = false;
+	this->_palafico = false;
 	// This loop will find the player who has to gain or remove a die.
 	while (it->getName() != playerName)
 	{
@@ -427,12 +427,12 @@ void	Game::_adjustDice(std::string const &playerName, bool previousPlayer, bool 
 		}
 		else
 			this->_decideStartPlayerNewRound(false, previousPlayer);
-		// Check if the player who lost a die has only one die left for palifico.
+		// Check if the player who lost a die has only one die left for palafico.
 		if (this->_players[playerIndex].getAmountDice() == 1)
 		{
-			this->_palifico = true;
+			this->_palafico = true;
 			std::cout << "\033[1;32m" << playerName << "\033[0m has one die left. ";
-			std::cout << "Palifico will start next round." << std::endl;
+			std::cout << "palafico will start next round." << std::endl;
 		}
 	}
 	else
@@ -489,7 +489,7 @@ size_t	Game::_countAllTheValues(std::string const &currentPlayer, std::string co
 	// This loop will count from all the players how many dice of the last bid are in the game.
 	while (it != this->_players.end())
 	{
-		totalValues += it->getAmountOfRolledValues(this->_valueOfDice, this->_palifico);
+		totalValues += it->getAmountOfRolledValues(this->_valueOfDice, this->_palafico);
 		it++;
 	}
 	usleep(1500000);

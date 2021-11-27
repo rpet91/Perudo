@@ -45,7 +45,7 @@ class Game
 		size_t							_valueOfDice;
 		size_t							_roundNumber;
 		int								_indexPlayer;
-		bool							_palifico;
+		bool							_palafico;
 };
 
 #endif
