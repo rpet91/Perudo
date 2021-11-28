@@ -476,7 +476,11 @@ size_t	Game::_countAllTheValues(std::string const &currentPlayer, std::string co
 	}
 	usleep(1500000);
 	std::cout << "There is a total of \033[1;36m[" << totalValues;
-	std::cout << "]\033[0m die/dice of value \033[1;36m[" << this->_valueOfDice;
+	std::cout << "]\033[0m die/dice of value \033[1;36m[";
+	if (this->_valueOfDice == JOKER)
+		std::cout << "J";
+	else
+		std::cout << this->_valueOfDice;
 	std::cout << "]\033[0m in the game!" << std::endl << std::endl;
 	return totalValues;
 }
