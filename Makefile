@@ -43,4 +43,4 @@ debug: fclean
 
 game: all
 		clear
-		./$(NAME)
+		./$(NAME) 
